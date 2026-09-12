@@ -1,0 +1,44 @@
+:root {
+  --bg: #0b0f1a;
+  --surface: #141a2a;
+  --text: #f4f6fb;
+  --muted: #9aa3b5;
+  --accent: #6ee7ff;
+  --accent-2: #a78bfa;
+  --border: #243049;
+}
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+}
+a { color: inherit; text-decoration: none; }
+.container { max-width: 880px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+.nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; }
+.brand { font-weight: 700; letter-spacing: 0.02em; }
+.lang { color: var(--muted); font-size: 0.9rem; border: 1px solid var(--border); padding: 0.35rem 0.7rem; border-radius: 999px; }
+.hero { display: grid; gap: 1.25rem; }
+.badge { width: fit-content; color: var(--accent); background: rgba(110,231,255,0.08); border: 1px solid rgba(110,231,255,0.25); padding: 0.3rem 0.7rem; border-radius: 999px; font-size: 0.85rem; }
+h1 { font-size: clamp(2rem, 5vw, 3rem); line-height: 1.15; margin: 0; }
+.lead { color: var(--muted); font-size: 1.15rem; max-width: 42rem; }
+.cta-row { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; margin-top: 0.5rem; }
+.btn {
+  appearance: none; border: none; cursor: pointer;
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: #071018; font-weight: 700; padding: 0.85rem 1.25rem; border-radius: 12px;
+}
+.btn:disabled { opacity: 0.6; cursor: wait; }
+.price { color: var(--muted); }
+.card {
+  margin-top: 2.5rem; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; padding: 1.25rem 1.4rem;
+}
+.card h2 { margin: 0 0 0.75rem; font-size: 1.1rem; }
+.card ul { margin: 0; padding-left: 1.1rem; color: var(--muted); }
+.card li { margin: 0.35rem 0; }
+.footer { margin-top: 3rem; color: var(--muted); font-size: 0.85rem; }
+[dir="rtl"] .card ul { padding-left: 0; padding-right: 1.1rem; }
