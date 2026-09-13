@@ -2,6 +2,17 @@
 
 **AI speaking gym → shareable 60s clips + duo invites**
 
+Live: https://speakclip-arena.parallelreach.workers.dev
+
+## Product loop
+
+1. **Practice** `/app` — pick EN/AR prompt, record up to 60s (MediaRecorder), stop early OK
+2. **Score + share** — heuristic fluency score; metadata in Cloudflare KV; card at `/c/[id]`
+3. **Duo invite** — create short code; friend accepts at `/duo/[code]` on the same prompt
+4. **Soft paywall** — 3 free practices/day (localStorage); Pro via Stripe Checkout
+
+Audio stays client-side (optional `.webm` download). KV stores metadata JSON only.
+
 ## Setup
 
 ```bash
@@ -11,20 +22,19 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:3000 — Arabic locale at `/ar`.
+## Deploy (Cloudflare Workers + OpenNext)
 
-## Stripe (test mode)
+```bash
+npm run build:cf
+npx wrangler deploy
+```
 
-- Parallel Reach Stripe account: `acct_1UEqg3KILdv5fyda`
-- Price ID (subscription, ~$10/week): `price_1UEqr7KILdv5fyda9pD26XtK`
-- Checkout Session is created by `POST /api/checkout` (`mode=subscription`)
-- Success → `/app` stub (“Wave 1 MVP — product loop next”)
-- Cancel → landing with `?canceled=1`
-
-**Never commit real secrets.** Use `.env.local` only; `.env.example` is the template.
+KV binding: `CLIPS` → namespace `speakclip-clips`.
 
 ## Scripts
 
 - `npm run dev` — local development
-- `npm run build` — production build
-- `npm run start` — serve production build
+- `npm run build:cf` — OpenNext Cloudflare build
+- `npm run deploy` — build + deploy
+
+**Never commit real secrets.**
