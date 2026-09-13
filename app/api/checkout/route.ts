@@ -13,7 +13,10 @@ export async function POST() {
     );
   }
 
-  const stripe = new Stripe(secret);
+  // Cloudflare Workers: use Fetch HTTP client (Node https hangs on workerd)
+  const stripe = new Stripe(secret, {
+    httpClient: Stripe.createFetchHttpClient(),
+  });
 
   try {
     const session = await stripe.checkout.sessions.create({
