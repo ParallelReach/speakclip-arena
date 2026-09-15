@@ -16,18 +16,18 @@ export default function HomeAr() {
       </nav>
       <section className="hero">
         <div className="badge">الموجة ١ — مباشر</div>
-        <h1>SpeakClip Arena — درّب تحدثك وانشر المقاطع</h1>
+        <h1>تحدث أفضل. انشر مقاطع ٦٠ ثانية. ادعُ صديقًا.</h1>
         <p className="lead">
-          صالة تحدث → مقاطع ٦٠ ثانية قابلة للمشاركة + دعوات ثنائية. ثلاث
-          محاولات مجانية يوميًا — ثم برو.
+          تمارين تحدث موقوتة مع درجات طلاقة — ثم شارك بطاقة أو تحدَّ صديقًا.
+          ثلاث محاولات مجانية يوميًا؛ برو بلا حدود.
         </p>
-        <div className="cta-row">
+        <div className="cta-row sticky-cta">
           <a className="btn" href="/app?lang=ar">
             تمرّن مجانًا
           </a>
-          <CheckoutButton label="افتح برو — ١٠$ / أسبوع" />
-          <span className="price">إلغاء في أي وقت · وضع اختبار Stripe</span>
+          <CheckoutButton label="برو ١٠$ / أسبوع" variant="secondary" />
         </div>
+        <p className="trust-line">إلغاء في أي وقت · دفع آمن</p>
       </section>
       <section className="card">
         <h2>ماذا تحصل عليه</h2>
@@ -37,7 +37,7 @@ export default function HomeAr() {
           <li>دعوات ثنائية لجلسات المساءلة</li>
         </ul>
       </section>
-      <p className="footer">Parallel Reach · Stripe test · acct_1UEqg3KILdv5fyda</p>
+      <p className="footer">Parallel Reach · SpeakClip Arena</p>
     </main>
   );
 }

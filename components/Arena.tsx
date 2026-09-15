@@ -7,7 +7,6 @@ import {
   canPractice,
   consumePractice,
   isPro,
-  markPro,
   remainingFree,
   FREE_LIMIT,
 } from "@/lib/paywall";
@@ -21,17 +20,19 @@ type Phase = "pick" | "ready" | "recording" | "saving" | "result" | "paywall";
 export default function Arena({
   initialLang = "en",
   lockedPromptId,
+  initialPromptId,
   duoCode: initialDuoCode,
   duoRole = "host",
 }: {
   initialLang?: "en" | "ar";
   lockedPromptId?: string;
+  initialPromptId?: string;
   duoCode?: string;
   duoRole?: "host" | "guest";
 }) {
   const [lang, setLang] = useState<"en" | "ar">(initialLang);
   const [promptId, setPromptId] = useState(
-    lockedPromptId || PROMPTS[0]!.id
+    lockedPromptId || initialPromptId || PROMPTS[0]!.id
   );
   const [phase, setPhase] = useState<Phase>("pick");
   const [elapsed, setElapsed] = useState(0);
@@ -61,7 +62,6 @@ export default function Arena({
   const dir = lang === "ar" ? "rtl" : "ltr";
 
   useEffect(() => {
-    markProFromUrl();
     setPro(isPro());
     setFreeLeft(remainingFree() === Infinity ? 999 : remainingFree());
   }, []);
@@ -70,8 +70,11 @@ export default function Arena({
     if (lockedPromptId) {
       setPromptId(lockedPromptId);
       setPhase("ready");
+    } else if (initialPromptId) {
+      setPromptId(initialPromptId);
+      setPhase("ready");
     }
-  }, [lockedPromptId]);
+  }, [lockedPromptId, initialPromptId]);
 
   const cleanupMedia = useCallback(() => {
     if (timerRef.current) {
@@ -326,26 +329,29 @@ export default function Arena({
       {phase === "paywall" && (
         <section className="card paywall-card">
           <div className="badge">
-            {lang === "ar" ? "٣ محاولات مجانية/يوم" : "3 free practices / day"}
+            {lang === "ar" ? "برو · قيمة يومية" : "Pro · keep the streak"}
           </div>
           <h2>
             {lang === "ar"
-              ? "لقد استخدمت محاولاتك المجانية اليوم"
-              : "You’ve used today’s free practices"}
+              ? "واصل التحسن بلا حدود اليوم"
+              : "Keep improving — unlimited today"}
           </h2>
           <p className="lead">
             {lang === "ar"
-              ? "افتح SpeakClip Pro لممارسة بلا حدود، بطاقات مشاركة، ودعوات ثنائية."
-              : "Unlock SpeakClip Pro for unlimited practice, share cards, and duo invites."}
+              ? "برو يفتح تمرينًا بلا حدود، بطاقات مشاركة، ودعوات ثنائية — ١٠$/أسبوع. إلغاء في أي وقت."
+              : "Pro unlocks unlimited practice, share cards, and duo invites — $10/week. Cancel anytime."}
           </p>
-          <div className="cta-row">
+          <div className="cta-row sticky-cta">
             <CheckoutButton
-              label={lang === "ar" ? "افتح برو — ١٠$/أسبوع" : "Go Pro — $10/week"}
+              label={lang === "ar" ? "افتح برو — ١٠$/أسبوع" : "Go Pro $10/week"}
             />
             <button type="button" className="btn-ghost" onClick={resetPractice}>
-              {lang === "ar" ? "رجوع" : "Back"}
+              {lang === "ar" ? "غدًا مجانًا" : "Come back free tomorrow"}
             </button>
           </div>
+          <p className="trust-line">
+            {lang === "ar" ? "إلغاء في أي وقت · دفع آمن" : "Cancel anytime · Secure checkout"}
+          </p>
         </section>
       )}
 
@@ -455,19 +461,19 @@ export default function Arena({
             <audio className="player" controls src={audioUrl} />
           )}
           {error && <p className="err">{error}</p>}
-          <div className="cta-row wrap">
-            <a className="btn" href={shareUrl || "#"}>
-              {lang === "ar" ? "فتح البطاقة" : "Open card"}
-            </a>
-            <button type="button" className="btn-ghost" onClick={copyShare}>
+          <div className="cta-row wrap sticky-cta">
+            <button type="button" className="btn" onClick={copyShare}>
               {copied
                 ? lang === "ar"
-                  ? "تم النسخ"
-                  : "Copied"
+                  ? "تم النسخ ✓"
+                  : "Link copied ✓"
                 : lang === "ar"
-                  ? "نسخ الرابط"
-                  : "Copy link"}
+                  ? "شارك بطاقتك"
+                  : "Share your card"}
             </button>
+            <a className="btn-ghost" href={shareUrl || "#"}>
+              {lang === "ar" ? "فتح البطاقة" : "Open card"}
+            </a>
             {audioUrl && (
               <button type="button" className="btn-ghost" onClick={downloadAudio}>
                 {lang === "ar" ? "تنزيل .webm" : "Download .webm"}
@@ -477,7 +483,7 @@ export default function Arena({
 
           {!initialDuoCode && (
             <div className="duo-box">
-              <h3>{lang === "ar" ? "دعوة ثنائية" : "Invite a duo"}</h3>
+              <h3>{lang === "ar" ? "ادعُ صديقًا لثنائي" : "Invite a duo"}</h3>
               <p className="muted">
                 {lang === "ar"
                   ? "صديقك يأخذ نفس التمرين — ثم تقارنان النتيجة."
@@ -485,16 +491,16 @@ export default function Arena({
               </p>
               {!duo ? (
                 <button type="button" className="btn" onClick={() => void inviteDuo()}>
-                  {lang === "ar" ? "إنشاء رمز دعوة" : "Create invite code"}
+                  {lang === "ar" ? "إنشاء دعوة ثنائية" : "Create duo invite"}
                 </button>
               ) : (
                 <div className="duo-ready">
                   <code className="duo-code">{duo.code}</code>
-                  <button type="button" className="btn-ghost" onClick={copyDuo}>
+                  <button type="button" className="btn" onClick={copyDuo}>
                     {duoLinkCopied
                       ? lang === "ar"
-                        ? "تم"
-                        : "Copied"
+                        ? "تم النسخ ✓"
+                        : "Copied ✓"
                       : lang === "ar"
                         ? "نسخ رابط الثنائي"
                         : "Copy duo link"}
@@ -520,13 +526,30 @@ export default function Arena({
                   <div className="score-num sm">{duo.guestScore ?? "—"}</div>
                 </div>
               </div>
+              <div className="cta-row wrap" style={{ marginTop: "1rem" }}>
+                <button type="button" className="btn" onClick={resetPractice}>
+                  {lang === "ar" ? "ادعُ آخر" : "Invite another"}
+                </button>
+                {!pro && (
+                  <CheckoutButton
+                    label={lang === "ar" ? "برو ١٠$/أسبوع" : "Go Pro $10/week"}
+                    variant="secondary"
+                  />
+                )}
+              </div>
             </div>
           )}
 
-          <div className="cta-row" style={{ marginTop: "1.25rem" }}>
+          <div className="cta-row wrap" style={{ marginTop: "1.25rem" }}>
             <button type="button" className="btn-ghost" onClick={resetPractice}>
               {lang === "ar" ? "تمرين آخر" : "Practice again"}
             </button>
+            {!pro && (
+              <CheckoutButton
+                label={lang === "ar" ? "برو بلا حدود — ١٠$/أسبوع" : "Go Pro $10/week"}
+                variant="secondary"
+              />
+            )}
           </div>
         </section>
       )}
@@ -534,11 +557,3 @@ export default function Arena({
   );
 }
 
-function markProFromUrl() {
-  try {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("session_id")) markPro();
-  } catch {
-    /* ignore */
-  }
-}

@@ -1,13 +1,15 @@
 import Arena from "@/components/Arena";
+import ProUnlock from "@/app/ProUnlock";
 
 export default async function AppPage({
   searchParams,
 }: {
-  searchParams: Promise<{ lang?: string; session_id?: string }>;
+  searchParams: Promise<{ lang?: string; session_id?: string; prompt?: string }>;
 }) {
   const sp = await searchParams;
   const lang = sp.lang === "ar" ? "ar" : "en";
-  const justPaid = Boolean(sp.session_id);
+  const sessionId = sp.session_id || undefined;
+  const promptId = sp.prompt || undefined;
 
   return (
     <main className="container">
@@ -24,13 +26,7 @@ export default async function AppPage({
           </a>
         </div>
       </nav>
-      {justPaid && (
-        <div className="banner-success">
-          {lang === "ar"
-            ? "تم الاشتراك — مرحبًا في برو. تمرّن بلا حدود."
-            : "Checkout success — welcome to Pro. Unlimited practice unlocked."}
-        </div>
-      )}
+      <ProUnlock sessionId={sessionId} lang={lang} />
       <section className="hero tight">
         <div className="badge">
           {lang === "ar" ? "الحلبة" : "Arena"}
@@ -46,7 +42,7 @@ export default async function AppPage({
             : "EN + AR prompts, up to 60s voice, fluency score, and duo invites."}
         </p>
       </section>
-      <Arena initialLang={lang} />
+      <Arena initialLang={lang} initialPromptId={promptId} />
       <p className="footer">Parallel Reach · SpeakClip Arena</p>
     </main>
   );

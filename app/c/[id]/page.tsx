@@ -1,5 +1,42 @@
 import { getClip } from "@/lib/kv";
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const clip = await getClip(id);
+  if (!clip) {
+    return {
+      title: "SpeakClip card",
+      description: "Practice speaking and ship a 60s clip.",
+    };
+  }
+  const title =
+    clip.lang === "ar"
+      ? `طلاقة ${clip.score} · SpeakClip`
+      : `Fluency ${clip.score} · SpeakClip`;
+  const description =
+    clip.promptText.slice(0, 140) +
+    (clip.promptText.length > 140 ? "…" : "");
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "website",
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description,
+    },
+  };
+}
 
 export default async function ClipCardPage({
   params,
@@ -12,6 +49,10 @@ export default async function ClipCardPage({
 
   const dir = clip.lang === "ar" ? "rtl" : "ltr";
   const secs = (clip.durationMs / 1000).toFixed(1);
+  const appHref =
+    clip.lang === "ar"
+      ? `/app?lang=ar&prompt=${encodeURIComponent(clip.promptId)}`
+      : `/app?prompt=${encodeURIComponent(clip.promptId)}`;
 
   return (
     <main className="container" dir={dir}>
@@ -52,9 +93,9 @@ export default async function ClipCardPage({
         {clip.transcriptPreview && (
           <p className="transcript">{clip.transcriptPreview}</p>
         )}
-        <div className="cta-row">
-          <a className="btn" href={clip.lang === "ar" ? "/app?lang=ar" : "/app"}>
-            {clip.lang === "ar" ? "جرّب الحلبة" : "Try the arena"}
+        <div className="cta-row sticky-cta">
+          <a className="btn" href={appHref}>
+            {clip.lang === "ar" ? "جرّب هذا التمرين" : "Try this prompt"}
           </a>
         </div>
       </section>

@@ -11,16 +11,10 @@ function todayKey(): string {
 export function isPro(): boolean {
   if (typeof window === "undefined") return false;
   try {
-    if (localStorage.getItem(PRO_KEY) === "1") return true;
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("session_id")) {
-      localStorage.setItem(PRO_KEY, "1");
-      return true;
-    }
+    return localStorage.getItem(PRO_KEY) === "1";
   } catch {
-    /* ignore */
+    return false;
   }
-  return false;
 }
 
 export function markPro(): void {
@@ -28,6 +22,28 @@ export function markPro(): void {
     localStorage.setItem(PRO_KEY, "1");
   } catch {
     /* ignore */
+  }
+}
+
+/** Verify Stripe Checkout session then unlock Pro. Never trust query param alone. */
+export async function verifyAndUnlockPro(
+  sessionId: string
+): Promise<{ ok: boolean; status?: string }> {
+  try {
+    const res = await fetch(
+      `/api/session?session_id=${encodeURIComponent(sessionId)}`
+    );
+    const data = (await res.json()) as {
+      ok?: boolean;
+      status?: string;
+    };
+    if (res.ok && data.ok) {
+      markPro();
+      return { ok: true, status: data.status };
+    }
+    return { ok: false, status: data.status || "unpaid" };
+  } catch {
+    return { ok: false, status: "error" };
   }
 }
 

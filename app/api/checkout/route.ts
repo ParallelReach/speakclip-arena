@@ -22,6 +22,9 @@ export async function POST() {
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       line_items: [{ price: priceId, quantity: 1 }],
+      allow_promotion_codes: true,
+      billing_address_collection: "auto",
+      metadata: { product: "speakclip-arena" },
       success_url: `${appUrl}/app?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${appUrl}/?canceled=1`,
     });

@@ -2,7 +2,13 @@
 
 import { useState } from "react";
 
-export default function CheckoutButton({ label }: { label: string }) {
+export default function CheckoutButton({
+  label,
+  variant = "primary",
+}: {
+  label: string;
+  variant?: "primary" | "secondary";
+}) {
   const [loading, setLoading] = useState(false);
 
   async function startCheckout() {
@@ -22,8 +28,10 @@ export default function CheckoutButton({ label }: { label: string }) {
     }
   }
 
+  const className = variant === "secondary" ? "btn-ghost" : "btn";
+
   return (
-    <button className="btn" onClick={startCheckout} disabled={loading}>
+    <button className={className} onClick={startCheckout} disabled={loading}>
       {loading ? "…" : label}
     </button>
   );

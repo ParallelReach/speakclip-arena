@@ -1,6 +1,7 @@
 import { getDuo } from "@/lib/kv";
 import { notFound } from "next/navigation";
 import Arena from "@/components/Arena";
+import CheckoutButton from "@/app/CheckoutButton";
 
 export default async function DuoPage({
   params,
@@ -13,6 +14,7 @@ export default async function DuoPage({
 
   const lang = duo.lang;
   const complete = duo.status === "complete";
+  const waitingForGuest = !complete && !!duo.hostClipId;
 
   return (
     <main className="container" dir={lang === "ar" ? "rtl" : "ltr"}>
@@ -29,9 +31,30 @@ export default async function DuoPage({
           {lang === "ar" ? "تحدي ثنائي" : "Duo challenge"} · {duo.code}
         </div>
         <h1>
-          {lang === "ar" ? "نفس التمرين — نتيجتان" : "Same prompt — two scores"}
+          {complete
+            ? lang === "ar"
+              ? "انتهى التحدي — قارن النتيجة"
+              : "Challenge complete — compare scores"
+            : waitingForGuest
+              ? lang === "ar"
+                ? "دورك الآن"
+                : "Your turn"
+              : lang === "ar"
+                ? "نفس التمرين — نتيجتان"
+                : "Same prompt — two scores"}
         </h1>
         <p className="lead prompt-big soft">{duo.promptText}</p>
+        {!complete && (
+          <p className="trust-line">
+            {waitingForGuest
+              ? lang === "ar"
+                ? "سجّل حتى ٦٠ ثانية على نفس التمرين"
+                : "Record up to 60s on the same prompt"
+              : lang === "ar"
+                ? "ابدأ التسجيل — ثم أرسل الرابط لصديقك"
+                : "Start recording — then send the link to a friend"}
+          </p>
+        )}
       </section>
 
       {complete ? (
@@ -57,19 +80,35 @@ export default async function DuoPage({
               )}
             </div>
           </div>
-          <div className="cta-row" style={{ marginTop: "1rem" }}>
+          <div className="cta-row wrap sticky-cta" style={{ marginTop: "1.25rem" }}>
             <a className="btn" href="/app">
-              {lang === "ar" ? "ابدأ تمرينك" : "Start your own"}
+              {lang === "ar" ? "ادعُ آخر" : "Invite another"}
             </a>
+            <CheckoutButton
+              label={lang === "ar" ? "برو ١٠$/أسبوع" : "Go Pro $10/week"}
+              variant="secondary"
+            />
           </div>
+          <p className="trust-line">
+            {lang === "ar" ? "إلغاء في أي وقت · دفع آمن" : "Cancel anytime · Secure checkout"}
+          </p>
         </section>
       ) : (
-        <Arena
-          initialLang={lang}
-          lockedPromptId={duo.promptId}
-          duoCode={duo.code}
-          duoRole={duo.hostClipId ? "guest" : "host"}
-        />
+        <>
+          {waitingForGuest && (
+            <div className="banner-success your-turn">
+              {lang === "ar"
+                ? "دورك — سجّل الآن وأغلق التحدي"
+                : "Your turn — record now to finish the challenge"}
+            </div>
+          )}
+          <Arena
+            initialLang={lang}
+            lockedPromptId={duo.promptId}
+            duoCode={duo.code}
+            duoRole={duo.hostClipId ? "guest" : "host"}
+          />
+        </>
       )}
       <p className="footer">Duo · /duo/{duo.code}</p>
     </main>

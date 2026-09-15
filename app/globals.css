@@ -185,3 +185,43 @@ h3 { margin: 0 0 0.4rem; font-size: 1rem; }
   .prompt-grid { grid-template-columns: 1fr; }
   h1 { font-size: 1.75rem; }
 }
+
+.trust-line {
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin: 0.35rem 0 0;
+}
+.banner-fail {
+  background: rgba(251,113,133,0.12); border: 1px solid rgba(251,113,133,0.35);
+  color: var(--danger); padding: 0.75rem 1rem; border-radius: 12px; margin-bottom: 1.25rem;
+}
+.your-turn { margin-bottom: 1rem; }
+
+/* Mobile: big tap targets + sticky primary CTAs */
+.btn, .btn-ghost {
+  min-height: 48px;
+  min-width: 48px;
+  font-size: 1rem;
+}
+.pill { min-height: 40px; padding: 0.5rem 0.95rem; }
+.prompt-chip { min-height: 64px; padding: 1rem; }
+
+@media (max-width: 560px) {
+  .container { padding: 1.25rem 1rem 5.5rem; }
+  .cta-row { gap: 0.65rem; }
+  .btn, .btn-ghost { width: 100%; }
+  .sticky-cta {
+    position: sticky;
+    bottom: 0.75rem;
+    z-index: 20;
+    padding: 0.65rem;
+    margin-left: -0.35rem;
+    margin-right: -0.35rem;
+    background: linear-gradient(180deg, transparent, rgba(11,15,26,0.92) 28%);
+    border-radius: 14px;
+  }
+  .sticky-cta .btn,
+  .sticky-cta .btn-ghost { flex: 1 1 auto; }
+  .compare-grid { gap: 0.75rem; }
+  .nav { margin-bottom: 1.25rem; }
+}
