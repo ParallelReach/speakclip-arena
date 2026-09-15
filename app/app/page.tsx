@@ -4,11 +4,20 @@ import ProUnlock from "@/app/ProUnlock";
 export default async function AppPage({
   searchParams,
 }: {
-  searchParams: Promise<{ lang?: string; session_id?: string; prompt?: string }>;
+  searchParams: Promise<{
+    lang?: string;
+    session_id?: string;
+    checkout?: string;
+    order_id?: string;
+    order?: string;
+    prompt?: string;
+  }>;
 }) {
   const sp = await searchParams;
   const lang = sp.lang === "ar" ? "ar" : "en";
   const sessionId = sp.session_id || undefined;
+  const checkoutSuccess = sp.checkout === "success";
+  const orderId = sp.order_id || sp.order || undefined;
   const promptId = sp.prompt || undefined;
 
   return (
@@ -26,7 +35,12 @@ export default async function AppPage({
           </a>
         </div>
       </nav>
-      <ProUnlock sessionId={sessionId} lang={lang} />
+      <ProUnlock
+        sessionId={sessionId}
+        checkoutSuccess={checkoutSuccess}
+        orderId={orderId}
+        lang={lang}
+      />
       <section className="hero tight">
         <div className="badge">
           {lang === "ar" ? "الحلبة" : "Arena"}

@@ -24,6 +24,8 @@
   "vars": {
     "STRIPE_PRICE_ID": "price_1UEqr7KILdv5fyda9pD26XtK",
     "NEXT_PUBLIC_APP_URL": "https://speakclip-arena.parallelreach.workers.dev",
-    "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY": "pk_test_51UEqg3KILdv5fydauhbU3dBixWkLTOZUJfMsram9GZgks0usNAh3RcNf4ZT7V3wSg1KWf8YmwGt4Pq7IL5FSfQP400CjjeLUkI"
+    "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY": "pk_test_51UEqg3KILdv5fydauhbU3dBixWkLTOZUJfMsram9GZgks0usNAh3RcNf4ZT7V3wSg1KWf8YmwGt4Pq7IL5FSfQP400CjjeLUkI",
+    "LEMONSQUEEZY_STORE_ID": "475492",
+    "LEMONSQUEEZY_VARIANT_ID": "2130424"
   }
 }

@@ -90,7 +90,7 @@ export default async function DuoPage({
             />
           </div>
           <p className="trust-line">
-            {lang === "ar" ? "إلغاء في أي وقت · دفع آمن" : "Cancel anytime · Secure checkout"}
+            {lang === "ar" ? "إلغاء في أي وقت · دفع آمن عبر Lemon Squeezy" : "Cancel anytime · Secure checkout via Lemon Squeezy (Merchant of Record)"}
           </p>
         </section>
       ) : (

@@ -27,7 +27,7 @@ export default function Home() {
           </a>
           <CheckoutButton label="Go Pro $10/week" variant="secondary" />
         </div>
-        <p className="trust-line">Cancel anytime · Secure checkout</p>
+        <p className="trust-line">Cancel anytime · Secure checkout via Lemon Squeezy (Merchant of Record)</p>
       </section>
       <section className="card">
         <h2>What you get</h2>

@@ -27,7 +27,7 @@ export default function HomeAr() {
           </a>
           <CheckoutButton label="برو ١٠$ / أسبوع" variant="secondary" />
         </div>
-        <p className="trust-line">إلغاء في أي وقت · دفع آمن</p>
+        <p className="trust-line">إلغاء في أي وقت · دفع آمن عبر Lemon Squeezy (تاجر السجل)</p>
       </section>
       <section className="card">
         <h2>ماذا تحصل عليه</h2>

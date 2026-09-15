@@ -22,6 +22,9 @@ declare global {
     STRIPE_PRICE_ID?: string;
     NEXT_PUBLIC_APP_URL?: string;
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY?: string;
+    LEMONSQUEEZY_API_KEY?: string;
+    LEMONSQUEEZY_STORE_ID?: string;
+    LEMONSQUEEZY_VARIANT_ID?: string;
   }
 }
 

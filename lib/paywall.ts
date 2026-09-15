@@ -25,7 +25,7 @@ export function markPro(): void {
   }
 }
 
-/** Verify Stripe Checkout session then unlock Pro. Never trust query param alone. */
+/** Verify Stripe Checkout session then unlock Pro (Stripe fallback path). Lemon Squeezy uses ?checkout=success client unlock until webhooks land. */
 export async function verifyAndUnlockPro(
   sessionId: string
 ): Promise<{ ok: boolean; status?: string }> {

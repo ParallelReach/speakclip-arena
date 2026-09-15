@@ -1,20 +1,58 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { isPro, verifyAndUnlockPro } from "@/lib/paywall";
+import { isPro, markPro, verifyAndUnlockPro } from "@/lib/paywall";
 
 export default function ProUnlock({
   sessionId,
+  checkoutSuccess,
+  orderId,
   lang = "en",
 }: {
   sessionId?: string;
+  /** Lemon Squeezy redirect: ?checkout=success */
+  checkoutSuccess?: boolean;
+  /** Optional Lemon order id / hash if present on redirect */
+  orderId?: string;
   lang?: "en" | "ar";
 }) {
   const [state, setState] = useState<"idle" | "checking" | "ok" | "fail">(
-    sessionId ? "checking" : "idle"
+    sessionId || checkoutSuccess ? "checking" : "idle"
   );
 
   useEffect(() => {
+    // Lemon Squeezy success redirect — unlock client-side for now.
+    // Live verification will use Lemon Squeezy webhooks later.
+    if (checkoutSuccess) {
+      markPro();
+      setState("ok");
+      try {
+        const url = new URL(window.location.href);
+        url.searchParams.delete("checkout");
+        // Optionally accept Lemon order query params if present
+        if (orderId) {
+          // keep a soft marker for future webhook reconciliation
+          try {
+            localStorage.setItem("speakclip_ls_order", orderId);
+          } catch {
+            /* ignore */
+          }
+        }
+        for (const key of [
+          "order_id",
+          "order",
+          "lemon_order",
+          "ls_order",
+        ]) {
+          url.searchParams.delete(key);
+        }
+        window.history.replaceState({}, "", url.pathname + url.search);
+      } catch {
+        /* ignore */
+      }
+      return;
+    }
+
     if (!sessionId) return;
     let cancelled = false;
     (async () => {
@@ -37,7 +75,7 @@ export default function ProUnlock({
     return () => {
       cancelled = true;
     };
-  }, [sessionId]);
+  }, [sessionId, checkoutSuccess, orderId]);
 
   if (state === "checking") {
     return (
